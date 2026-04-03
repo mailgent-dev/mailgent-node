@@ -33,4 +33,8 @@ export class SupervisorIdentitiesResource {
   rotateKey(identityId: string): Promise<RotateKeyResponse> {
     return this.http.post<RotateKeyResponse>(`/v0/platform/identities/${encodeURIComponent(identityId)}/rotate-key`)
   }
+
+  updateScopes(identityId: string, params: { addScopes?: string[]; removeScopes?: string[] }): Promise<{ identityId: string; scopes: string[] }> {
+    return this.http.patch<{ identityId: string; scopes: string[] }>(`/v0/platform/identities/${encodeURIComponent(identityId)}`, params)
+  }
 }
