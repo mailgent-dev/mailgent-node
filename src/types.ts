@@ -154,6 +154,44 @@ export interface SupervisorConfig {
   baseUrl?: string
 }
 
+export interface CalendarEvent {
+  eventId: string
+  title: string
+  description: string | null
+  startAt: string
+  endAt: string | null
+  isAllDay: boolean
+  location: string | null
+  metadata: Record<string, unknown> | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreateCalendarEventParams {
+  title: string
+  description?: string
+  startAt: string
+  endAt?: string
+  isAllDay?: boolean
+  location?: string
+  metadata?: Record<string, unknown>
+}
+
+export interface UpdateCalendarEventParams {
+  title?: string
+  description?: string | null
+  startAt?: string
+  endAt?: string | null
+  isAllDay?: boolean
+  location?: string | null
+  metadata?: Record<string, unknown> | null
+}
+
+export interface PaginatedCalendarEvents {
+  events: CalendarEvent[]
+  count: number
+}
+
 export interface VaultList {
   credentials: CredentialMetadata[]
   count: number

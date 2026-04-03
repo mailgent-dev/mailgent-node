@@ -4,6 +4,7 @@ import { MailResource } from "./resources/mail"
 import { VaultResource } from "./resources/vault"
 import { LogsResource } from "./resources/logs"
 import { DidResource } from "./resources/did"
+import { CalendarResource } from "./resources/calendar"
 import type { MailgentConfig } from "./types"
 
 const DEFAULT_BASE_URL = "https://api.mailgent.dev"
@@ -14,6 +15,7 @@ export class Mailgent {
   readonly vault: VaultResource
   readonly logs: LogsResource
   readonly did: DidResource
+  readonly calendar: CalendarResource
 
   constructor(config: MailgentConfig) {
     if (!config.apiKey) {
@@ -27,5 +29,6 @@ export class Mailgent {
     this.vault = new VaultResource(http)
     this.logs = new LogsResource(http)
     this.did = new DidResource(http)
+    this.calendar = new CalendarResource(http)
   }
 }
