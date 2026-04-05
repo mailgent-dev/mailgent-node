@@ -1,4 +1,4 @@
-import { MailgentApiError } from "./errors"
+import { HivekeyApiError } from "./errors"
 
 export class HttpClient {
   private baseUrl: string
@@ -27,7 +27,7 @@ export class HttpClient {
     const data = await res.json().catch(() => ({}))
 
     if (!res.ok) {
-      throw new MailgentApiError(
+      throw new HivekeyApiError(
         res.status,
         data.error || "unknown_error",
         data.message || `Request failed with status ${res.status}`,

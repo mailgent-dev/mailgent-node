@@ -5,11 +5,11 @@ import { VaultResource } from "./resources/vault"
 import { LogsResource } from "./resources/logs"
 import { DidResource } from "./resources/did"
 import { CalendarResource } from "./resources/calendar"
-import type { MailgentConfig } from "./types"
+import type { HivekeyConfig } from "./types"
 
-const DEFAULT_BASE_URL = "https://api.mailgent.dev"
+const DEFAULT_BASE_URL = "https://api.hivekey.ai"
 
-export class Mailgent {
+export class Hivekey {
   readonly identity: IdentityResource
   readonly mail: MailResource
   readonly vault: VaultResource
@@ -17,9 +17,9 @@ export class Mailgent {
   readonly did: DidResource
   readonly calendar: CalendarResource
 
-  constructor(config: MailgentConfig) {
+  constructor(config: HivekeyConfig) {
     if (!config.apiKey) {
-      throw new Error("Mailgent API key is required. Pass { apiKey: 'mgent-...' } or set MAILGENT_API_KEY env var.")
+      throw new Error("Hivekey API key is required. Pass { apiKey: 'mgent-...' } or set HIVEKEY_API_KEY env var.")
     }
 
     const http = new HttpClient(config.baseUrl || DEFAULT_BASE_URL, config.apiKey)

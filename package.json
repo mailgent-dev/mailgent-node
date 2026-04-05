@@ -1,7 +1,7 @@
 {
-  "name": "mailgent",
+  "name": "hivekey",
   "version": "0.2.0",
-  "description": "Official Node.js SDK for the Mailgent API",
+  "description": "Official Node.js SDK for the Hivekey API",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,7 +19,7 @@
     "test": "vitest run"
   },
   "engines": { "node": ">=18" },
-  "keywords": ["mailgent", "ai", "agent", "email", "mcp", "did", "vault", "sdk"],
+  "keywords": ["hivekey", "ai", "agent", "email", "mcp", "did", "vault", "sdk"],
   "license": "MIT",
   "devDependencies": {
     "tsup": "^8.0.0",

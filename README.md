@@ -1,8 +1,8 @@
-# Mailgent Node.js SDK
+# Hivekey Node.js SDK
 
-The official Node.js/TypeScript SDK for the [Mailgent API](https://docs.mailgent.dev) -- identity infrastructure for AI agents.
+The official Node.js/TypeScript SDK for the [Hivekey API](https://docs.hivekey.ai) -- identity infrastructure for AI agents.
 
-[![npm](https://img.shields.io/npm/v/mailgent)](https://www.npmjs.com/package/mailgent)
+[![npm](https://img.shields.io/npm/v/hivekey)](https://www.npmjs.com/package/hivekey)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 - Zero dependencies (native `fetch`)
@@ -13,33 +13,33 @@ The official Node.js/TypeScript SDK for the [Mailgent API](https://docs.mailgent
 ## Installation
 
 ```bash
-npm install mailgent
+npm install hivekey
 ```
 
 ## Quick start
 
 ```typescript
-import { Mailgent } from "mailgent";
+import { Hivekey } from "hivekey";
 
-const client = new Mailgent({ apiKey: "mgent-..." });
+const client = new Hivekey({ apiKey: "mgent-..." });
 
 const { messages } = await client.mail.listMessages({ limit: 10 });
 ```
 
 ## Authentication
 
-Create an API key in the [Mailgent Console](https://console.mailgent.dev). Keys are prefixed with `mgent-`.
+Create an API key in the [Hivekey Console](https://console.hivekey.ai). Keys are prefixed with `mgent-`.
 
 Pass the key directly:
 
 ```typescript
-const client = new Mailgent({ apiKey: "mgent-..." });
+const client = new Hivekey({ apiKey: "mgent-..." });
 ```
 
 Or load from an environment variable:
 
 ```typescript
-const client = new Mailgent({ apiKey: process.env.MAILGENT_API_KEY });
+const client = new Hivekey({ apiKey: process.env.HIVEKEY_API_KEY });
 ```
 
 ## Usage
@@ -57,7 +57,7 @@ const identity = await client.identity.whoami();
 await client.mail.send({
   to: "recipient@example.com",
   subject: "Hello from my agent",
-  text: "Sent via Mailgent SDK.",
+  text: "Sent via Hivekey SDK.",
 });
 
 // Reply to a message
@@ -137,15 +137,15 @@ const domainDoc = await client.did.resolveDomain();
 
 ## Error handling
 
-All API errors are thrown as `MailgentApiError` with structured fields:
+All API errors are thrown as `HivekeyApiError` with structured fields:
 
 ```typescript
-import { Mailgent, MailgentApiError } from "mailgent";
+import { Hivekey, HivekeyApiError } from "hivekey";
 
 try {
   await client.mail.send({ to: "test@example.com", subject: "Hi", text: "Hello" });
 } catch (e) {
-  if (e instanceof MailgentApiError) {
+  if (e instanceof HivekeyApiError) {
     console.error(e.status);  // HTTP status code
     console.error(e.code);    // API error code
     console.error(e.message); // Human-readable message
@@ -159,7 +159,7 @@ The SDK exports all request and response types:
 
 ```typescript
 import type {
-  MailgentConfig,
+  HivekeyConfig,
   MessageResponse,
   ThreadResponse,
   ThreadDetailResponse,
@@ -175,14 +175,14 @@ import type {
   PaginatedLogs,
   LogsStatsResponse,
   DidDocument,
-} from "mailgent";
+} from "hivekey";
 ```
 
 ## Links
 
-- [Documentation](https://docs.mailgent.dev)
-- [Website](https://mailgent.dev)
-- [Console](https://console.mailgent.dev)
+- [Documentation](https://docs.hivekey.ai)
+- [Website](https://hivekey.ai)
+- [Console](https://console.hivekey.ai)
 
 ## License
 

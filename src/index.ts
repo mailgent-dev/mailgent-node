@@ -1,8 +1,8 @@
-export { Mailgent } from "./client"
-export { MailgentSupervisor } from "./supervisor"
-export { MailgentApiError } from "./errors"
+export { Hivekey } from "./client"
+export { HivekeySupervisor } from "./supervisor"
+export { HivekeyApiError } from "./errors"
 export type {
-  MailgentConfig,
+  HivekeyConfig,
   SupervisorConfig,
   MessageResponse,
   ThreadResponse,

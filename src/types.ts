@@ -83,7 +83,7 @@ export interface TotpResponse {
   remaining: number
 }
 
-export interface MailgentConfig {
+export interface HivekeyConfig {
   apiKey: string
   baseUrl?: string
 }

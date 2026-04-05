@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from "vitest"
 import { HttpClient } from "../src/http"
-import { MailgentApiError } from "../src/errors"
+import { HivekeyApiError } from "../src/errors"
 
 describe("HttpClient", () => {
   afterEach(() => vi.restoreAllMocks())
@@ -13,11 +13,11 @@ describe("HttpClient", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const http = new HttpClient("https://api.mailgent.dev", "mgent-secret")
+    const http = new HttpClient("https://api.hivekey.ai", "mgent-secret")
     await http.get("/v0/whoami")
 
     expect(mockFetch).toHaveBeenCalledWith(
-      "https://api.mailgent.dev/v0/whoami",
+      "https://api.hivekey.ai/v0/whoami",
       expect.objectContaining({
         method: "GET",
         headers: expect.objectContaining({
@@ -27,20 +27,20 @@ describe("HttpClient", () => {
     )
   })
 
-  it("throws MailgentApiError on 401", async () => {
+  it("throws HivekeyApiError on 401", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
       ok: false,
       status: 401,
       json: () => Promise.resolve({ error: "unauthorized", message: "Invalid API key" }),
     }))
 
-    const http = new HttpClient("https://api.mailgent.dev", "bad-key")
-    await expect(http.get("/v0/whoami")).rejects.toThrow(MailgentApiError)
+    const http = new HttpClient("https://api.hivekey.ai", "bad-key")
+    await expect(http.get("/v0/whoami")).rejects.toThrow(HivekeyApiError)
 
     try {
       await http.get("/v0/whoami")
     } catch (e) {
-      const err = e as MailgentApiError
+      const err = e as HivekeyApiError
       expect(err.status).toBe(401)
       expect(err.code).toBe("unauthorized")
     }
@@ -52,7 +52,7 @@ describe("HttpClient", () => {
       status: 204,
     }))
 
-    const http = new HttpClient("https://api.mailgent.dev", "mgent-key")
+    const http = new HttpClient("https://api.hivekey.ai", "mgent-key")
     const result = await http.delete("/v0/messages/123")
     expect(result).toBeUndefined()
   })
@@ -65,7 +65,7 @@ describe("HttpClient", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const http = new HttpClient("https://api.mailgent.dev", "mgent-key")
+    const http = new HttpClient("https://api.hivekey.ai", "mgent-key")
     await http.post("/v0/messages/send", { to: ["a@b.com"], subject: "Hi", text: "Hello" })
 
     expect(mockFetch).toHaveBeenCalledWith(
@@ -85,11 +85,11 @@ describe("HttpClient", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const http = new HttpClient("https://api.mailgent.dev/", "mgent-key")
+    const http = new HttpClient("https://api.hivekey.ai/", "mgent-key")
     await http.get("/v0/whoami")
 
     expect(mockFetch).toHaveBeenCalledWith(
-      "https://api.mailgent.dev/v0/whoami",
+      "https://api.hivekey.ai/v0/whoami",
       expect.any(Object),
     )
   })

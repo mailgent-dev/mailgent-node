@@ -1,18 +1,18 @@
 import { describe, it, expect } from "vitest"
-import { MailgentApiError } from "../src/errors"
+import { HivekeyApiError } from "../src/errors"
 
-describe("MailgentApiError", () => {
+describe("HivekeyApiError", () => {
   it("has correct properties", () => {
-    const err = new MailgentApiError(404, "not_found", "Resource not found")
+    const err = new HivekeyApiError(404, "not_found", "Resource not found")
     expect(err.status).toBe(404)
     expect(err.code).toBe("not_found")
     expect(err.message).toBe("Resource not found")
-    expect(err.name).toBe("MailgentApiError")
+    expect(err.name).toBe("HivekeyApiError")
   })
 
   it("is an instance of Error", () => {
-    const err = new MailgentApiError(500, "internal", "Server error")
+    const err = new HivekeyApiError(500, "internal", "Server error")
     expect(err).toBeInstanceOf(Error)
-    expect(err).toBeInstanceOf(MailgentApiError)
+    expect(err).toBeInstanceOf(HivekeyApiError)
   })
 })
