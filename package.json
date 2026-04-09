@@ -1,26 +1,44 @@
 {
-  "name": "loomal",
-  "version": "0.2.0",
-  "description": "Official Node.js SDK for the Loomal API",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
+  "name": "@loomal/sdk",
+  "version": "0.1.0",
+  "description": "Official Node.js SDK for the Loomal API — identity infrastructure for AI agents",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
     }
   },
-  "files": ["dist"],
+  "files": ["dist", "README.md", "LICENSE"],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepublishOnly": "npm run build && npm test"
   },
   "engines": { "node": ">=18" },
   "keywords": ["loomal", "ai", "agent", "email", "mcp", "did", "vault", "sdk"],
   "license": "MIT",
+  "author": "Loomal",
+  "homepage": "https://loomal.ai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loomal-ai/loomal-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/loomal-ai/loomal-node/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "tsup": "^8.0.0",
     "typescript": "^5.4.0",

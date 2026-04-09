@@ -2,7 +2,7 @@
 
 The official Node.js/TypeScript SDK for the [Loomal API](https://docs.loomal.ai) -- identity infrastructure for AI agents.
 
-[![npm](https://img.shields.io/npm/v/loomal)](https://www.npmjs.com/package/loomal)
+[![npm](https://img.shields.io/npm/v/@loomal/sdk)](https://www.npmjs.com/package/@loomal/sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 - Zero dependencies (native `fetch`)
@@ -13,13 +13,13 @@ The official Node.js/TypeScript SDK for the [Loomal API](https://docs.loomal.ai)
 ## Installation
 
 ```bash
-npm install loomal
+npm install @loomal/sdk
 ```
 
 ## Quick start
 
 ```typescript
-import { Loomal } from "loomal";
+import { Loomal } from "@loomal/sdk";
 
 const client = new Loomal({ apiKey: "loid-..." });
 
@@ -50,90 +50,9 @@ const client = new Loomal({ apiKey: process.env.LOOMAL_API_KEY });
 const identity = await client.identity.whoami();
 ```
 
-### Mail
+### More resources
 
-```typescript
-// Send an email
-await client.mail.send({
-  to: "recipient@example.com",
-  subject: "Hello from my agent",
-  text: "Sent via Loomal SDK.",
-});
-
-// Reply to a message
-await client.mail.reply(messageId, { text: "Got it, thanks." });
-
-// List messages
-const { messages } = await client.mail.listMessages({ limit: 20 });
-
-// Get a single message
-const message = await client.mail.getMessage(messageId);
-
-// Update labels
-await client.mail.updateLabels(messageId, {
-  addLabels: ["STARRED"],
-  removeLabels: ["UNREAD"],
-});
-
-// Delete a message
-await client.mail.deleteMessage(messageId);
-
-// List threads
-const { threads } = await client.mail.listThreads({ limit: 10 });
-
-// Get a thread with its messages
-const thread = await client.mail.getThread(threadId, { limit: 25 });
-
-// Delete a thread
-await client.mail.deleteThread(threadId);
-```
-
-### Vault
-
-```typescript
-// Store a credential
-await client.vault.store("github-token", {
-  type: "api_key",
-  data: { token: "ghp_..." },
-  metadata: { service: "github" },
-});
-
-// List credentials
-const credentials = await client.vault.list();
-
-// Get a credential (decrypted)
-const cred = await client.vault.get("github-token");
-
-// Get a TOTP code
-const { code } = await client.vault.totp("2fa-secret");
-
-// Delete a credential
-await client.vault.delete("github-token");
-```
-
-### Activity Logs
-
-```typescript
-// List logs with filters
-const { logs } = await client.logs.list({
-  limit: 50,
-  category: "mail",
-  status: "success",
-});
-
-// Get log statistics
-const stats = await client.logs.stats();
-```
-
-### DID
-
-```typescript
-// Resolve an identity DID document
-const doc = await client.did.resolve(identityId);
-
-// Resolve a domain DID document
-const domainDoc = await client.did.resolveDomain();
-```
+The SDK also exposes `client.mail`, `client.calendar`, `client.vault`, `client.logs`, and `client.did`. See the full reference at **[docs.loomal.ai](https://docs.loomal.ai)** for request/response shapes, pagination, and end-to-end examples.
 
 ## Error handling
 
