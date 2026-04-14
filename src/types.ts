@@ -196,3 +196,11 @@ export interface VaultList {
   credentials: CredentialMetadata[]
   count: number
 }
+
+export interface EmailRuleResponse {
+  id: string
+  type: "ALLOW" | "BLOCK"
+  scope: "RECEIVE" | "SEND" | "REPLY"
+  value: string
+  createdAt: string
+}

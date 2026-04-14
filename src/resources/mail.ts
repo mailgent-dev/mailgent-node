@@ -1,5 +1,5 @@
 import type { HttpClient } from "../http"
-import type { MessageResponse, PaginatedMessages, PaginatedThreads, ThreadDetailResponse } from "../types"
+import type { MessageResponse, PaginatedMessages, PaginatedThreads, ThreadDetailResponse, EmailRuleResponse } from "../types"
 
 export class MailResource {
   constructor(private http: HttpClient) {}
@@ -57,5 +57,23 @@ export class MailResource {
 
   deleteThread(threadId: string): Promise<void> {
     return this.http.delete(`/v0/threads/${encodeURIComponent(threadId)}`)
+  }
+
+  // --- Email Rules (Allow/Block Lists) ---
+
+  listRules(): Promise<{ rules: EmailRuleResponse[] }> {
+    return this.http.get<{ rules: EmailRuleResponse[] }>("/v0/email-rules")
+  }
+
+  addRule(params: {
+    type: "ALLOW" | "BLOCK"
+    scope: "RECEIVE" | "SEND" | "REPLY"
+    value: string
+  }): Promise<{ rule: EmailRuleResponse }> {
+    return this.http.post<{ rule: EmailRuleResponse }>("/v0/email-rules", params)
+  }
+
+  deleteRule(ruleId: string): Promise<void> {
+    return this.http.delete(`/v0/email-rules/${encodeURIComponent(ruleId)}`)
   }
 }
