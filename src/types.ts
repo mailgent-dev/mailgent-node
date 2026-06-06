@@ -85,15 +85,11 @@ export interface CredentialWithData extends CredentialMetadata {
 }
 
 /**
- * SELLER projects accept x402 payments on registered endpoints. BUYER projects
- * spend via mandates and own the agent infrastructure (inbox, vault, calendar,
- * identity signing) used by autonomous agents.
- *
- * Picked at project creation; BUYER is the default. Default scopes attached
- * at create time differ by purpose — branch on this field if your code needs
- * to behave differently per role.
+ * BUYER projects spend via mandates and own the agent infrastructure (inbox,
+ * vault, calendar, identity signing) used by autonomous agents. BUYER is the
+ * only purpose managed by this SDK, and the default at project creation.
  */
-export type IdentityPurpose = "SELLER" | "BUYER"
+export type IdentityPurpose = "BUYER"
 
 export interface IdentityResponse {
   identityId: string
@@ -101,7 +97,7 @@ export interface IdentityResponse {
   email: string
   displayName: string
   type: string
-  /** SELLER or BUYER. Set at project creation; BUYER is the default. */
+  /** Project purpose. Always BUYER for this SDK. */
   purpose: IdentityPurpose
   scopes: string[]
   usageCount: number
@@ -172,7 +168,7 @@ export interface IdentitySummary {
   identityId: string
   name: string
   type: string
-  /** SELLER or BUYER. Set at project creation; BUYER is the default. */
+  /** Project purpose. Always BUYER for this SDK. */
   purpose: IdentityPurpose
   email: string | null
   scopes: string[]
@@ -186,11 +182,11 @@ export interface IdentityDetail extends IdentitySummary {
 }
 
 export interface CreateIdentityParams {
-  /** SELLER or BUYER. Defaults to BUYER. */
+  /** Project purpose. Defaults to BUYER. */
   purpose?: IdentityPurpose
   /** Display name. If omitted, server picks a fresh 3-word slug (editable later via `update()`). */
   name?: string
-  /** BUYER-only email prefix override. If omitted, server picks a slug. Ignored for SELLER. */
+  /** Email prefix override. If omitted, the server picks a slug. */
   emailName?: string
   /** Defaults applied per `purpose` if omitted. */
   scopes?: string[]
@@ -201,7 +197,7 @@ export interface CreateIdentityResponse {
   name: string
   type: string
   purpose: IdentityPurpose
-  /** `null` for SELLER projects (no inbox). */
+  /** The agent's inbox address, or `null` if no inbox is provisioned. */
   emailAddress: string | null
   scopes: string[]
   apiKeyPrefix: string
@@ -411,7 +407,7 @@ export interface PaymentsPaySuccess {
     /** ISO 8601. */
     validUntil: string
   }
-  /** Signed receipt from seller, when surfaced. */
+  /** Signed receipt for the payment, when surfaced. */
   receipt?: unknown
 }
 
@@ -423,7 +419,7 @@ export interface PaymentsPayFailure extends PaymentError {
 
 export type PaymentsPayResponse = PaymentsPaySuccess | PaymentsPayFailure
 
-// --- Bank-statement-style activity feed (buyer + seller, merged) ---
+// --- Bank-statement-style activity feed ---
 
 interface PaymentActivityCommon {
   id: string

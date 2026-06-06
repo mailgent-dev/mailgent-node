@@ -123,7 +123,7 @@ describe("PaymentsResource", () => {
         txHash: "0xtxhash",
         payer: "0xpayer",
         recipient: "0xrecipient",
-        resource: "https://seller.example.com/search",
+        resource: "https://api.example.com/search",
         balanceAfter: { usdc: "0.95", usdcRaw: "950000" },
         mandate: {
           mandateId: "m-1",
@@ -137,7 +137,7 @@ describe("PaymentsResource", () => {
     vi.stubGlobal("fetch", mockFetch)
 
     const client = new Mailgent({ apiKey: "loid-test" })
-    const result = await client.payments.pay({ url: "https://seller.example.com/search" })
+    const result = await client.payments.pay({ url: "https://api.example.com/search" })
 
     expect(result.ok).toBe(true)
     if (result.ok) {
@@ -157,7 +157,7 @@ describe("PaymentsResource", () => {
       }),
     )
     const body = JSON.parse((mockFetch.mock.calls[0][1] as any).body)
-    expect(body.url).toBe("https://seller.example.com/search")
+    expect(body.url).toBe("https://api.example.com/search")
   })
 
   it("pay surfaces failure body on 402 without throwing", async () => {
@@ -169,13 +169,13 @@ describe("PaymentsResource", () => {
         code: "mandate_per_call_exceeded",
         message: "Price 0.50 USDC exceeds maxPerCallUsdc 0.10",
         hint: "Raise maxPerCallUsdc on the mandate or pay a cheaper endpoint",
-        resource: "https://seller.example.com/search",
+        resource: "https://api.example.com/search",
         cost: { amountUsdc: "0.50", network: "base" },
       }),
     }))
 
     const client = new Mailgent({ apiKey: "loid-test" })
-    const result = await client.payments.pay({ url: "https://seller.example.com/search" })
+    const result = await client.payments.pay({ url: "https://api.example.com/search" })
 
     expect(result.ok).toBe(false)
     if (!result.ok) {
@@ -195,7 +195,7 @@ describe("PaymentsResource", () => {
         txHash: null,
         payer: "0xpayer",
         recipient: "0xrecipient",
-        resource: "https://seller.example.com/search",
+        resource: "https://api.example.com/search",
         balanceAfter: { usdc: "1.00", usdcRaw: "1000000" },
         mandate: {
           mandateId: "m-1",
@@ -209,7 +209,7 @@ describe("PaymentsResource", () => {
     vi.stubGlobal("fetch", mockFetch)
 
     const client = new Mailgent({ apiKey: "loid-test" })
-    await client.payments.pay({ url: "https://seller.example.com/search", dryRun: true })
+    await client.payments.pay({ url: "https://api.example.com/search", dryRun: true })
 
     const body = JSON.parse((mockFetch.mock.calls[0][1] as any).body)
     expect(body.dryRun).toBe(true)
@@ -224,7 +224,7 @@ describe("PaymentsResource", () => {
 
     const client = new Mailgent({ apiKey: "loid-test" })
     await expect(
-      client.payments.pay({ url: "https://seller.example.com/search" }),
+      client.payments.pay({ url: "https://api.example.com/search" }),
     ).rejects.toThrow(/discriminator/)
   })
 
@@ -239,8 +239,8 @@ describe("PaymentsResource", () => {
             direction: "out",
             network: "base",
             amountUsdcRaw: "50000",
-            counterparty: "0xseller",
-            resource: "https://seller.example.com/search",
+            counterparty: "0xapi",
+            resource: "https://api.example.com/search",
             txHash: "0xtxout",
             status: "settled",
             failureReason: null,
