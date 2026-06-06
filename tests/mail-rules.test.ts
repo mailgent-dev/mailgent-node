@@ -6,7 +6,7 @@ describe("MailResource — Email Rules", () => {
   afterEach(() => vi.restoreAllMocks())
 
   function mockHttp() {
-    const http = new HttpClient("https://api.loomal.ai", "loid-test")
+    const http = new HttpClient("https://api.mailgent.dev", "loid-test")
     return { http, mail: new MailResource(http) }
   }
 
@@ -22,7 +22,7 @@ describe("MailResource — Email Rules", () => {
     const result = await mail.listRules()
 
     expect(mockFetch).toHaveBeenCalledWith(
-      "https://api.loomal.ai/v0/email-rules",
+      "https://api.mailgent.dev/v0/email-rules",
       expect.objectContaining({ method: "GET" }),
     )
     expect(result.rules).toHaveLength(1)
@@ -41,7 +41,7 @@ describe("MailResource — Email Rules", () => {
     const result = await mail.addRule({ type: "ALLOW", scope: "RECEIVE", value: "alice@example.com" })
 
     expect(mockFetch).toHaveBeenCalledWith(
-      "https://api.loomal.ai/v0/email-rules",
+      "https://api.mailgent.dev/v0/email-rules",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ type: "ALLOW", scope: "RECEIVE", value: "alice@example.com" }),
@@ -62,7 +62,7 @@ describe("MailResource — Email Rules", () => {
     await mail.deleteRule("rule-123")
 
     expect(mockFetch).toHaveBeenCalledWith(
-      "https://api.loomal.ai/v0/email-rules/rule-123",
+      "https://api.mailgent.dev/v0/email-rules/rule-123",
       expect.objectContaining({ method: "DELETE" }),
     )
   })

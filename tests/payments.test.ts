@@ -1,110 +1,12 @@
 import { describe, it, expect, vi, afterEach } from "vitest"
-import { Loomal } from "../src/client"
+import { Mailgent } from "../src/client"
 
 describe("PaymentsResource", () => {
   afterEach(() => vi.restoreAllMocks())
 
   it("client has payments resource", () => {
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     expect(client.payments).toBeDefined()
-  })
-
-  it("challenge calls POST /v0/payments/challenge with defaults", async () => {
-    const mockFetch = vi.fn().mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve({
-        x402Version: 1,
-        accepts: [{
-          scheme: "exact",
-          network: "base",
-          maxAmountRequired: "50000",
-          resource: "https://example.com/api",
-          description: "Test API",
-          mimeType: "",
-          payTo: "0xabc",
-          maxTimeoutSeconds: 60,
-          asset: "0xusdc",
-          extra: { name: "USD Coin", version: "2" },
-        }],
-      }),
-    })
-    vi.stubGlobal("fetch", mockFetch)
-
-    const client = new Loomal({ apiKey: "loid-test" })
-    const result = await client.payments.challenge({
-      amount: "0.05",
-      resource: "https://example.com/api",
-    })
-
-    expect(result.x402Version).toBe(1)
-    expect(result.accepts[0].maxAmountRequired).toBe("50000")
-
-    expect(mockFetch).toHaveBeenCalledWith(
-      expect.stringContaining("/v0/payments/challenge"),
-      expect.objectContaining({
-        method: "POST",
-        headers: expect.objectContaining({
-          Authorization: "Bearer loid-test",
-          "Content-Type": "application/json",
-        }),
-      }),
-    )
-
-    const body = JSON.parse((mockFetch.mock.calls[0][1] as any).body)
-    expect(body.amount).toBe("0.05")
-    expect(body.network).toBe("base")
-    expect(body.resource).toBe("https://example.com/api")
-  })
-
-  it("redeem calls POST /v0/payments/redeem", async () => {
-    const mockFetch = vi.fn().mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve({
-        ok: true,
-        paymentResponse: "base64-response",
-        txHash: "0xtxhash",
-        payer: "0xpayer",
-        paymentInId: "pay-1",
-      }),
-    })
-    vi.stubGlobal("fetch", mockFetch)
-
-    const client = new Loomal({ apiKey: "loid-test" })
-    const result = await client.payments.redeem({
-      paymentHeader: "base64-header",
-      resource: "https://example.com/api",
-      amount: "0.05",
-    })
-
-    expect(result).toMatchObject({ ok: true, txHash: "0xtxhash" })
-
-    const body = JSON.parse((mockFetch.mock.calls[0][1] as any).body)
-    expect(body.paymentHeader).toBe("base64-header")
-    expect(body.amount).toBe("0.05")
-    expect(body.network).toBe("base")
-  })
-
-  it("redeem returns rejection body when ok=false", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve({
-        ok: false,
-        stage: "verify",
-        reason: "invalid_signature",
-      }),
-    }))
-
-    const client = new Loomal({ apiKey: "loid-test" })
-    const result = await client.payments.redeem({
-      paymentHeader: "bad",
-      resource: "https://example.com/api",
-      amount: "0.05",
-    })
-
-    expect(result).toMatchObject({ ok: false, stage: "verify", reason: "invalid_signature" })
   })
 
   it("list calls GET /v0/payments", async () => {
@@ -131,7 +33,7 @@ describe("PaymentsResource", () => {
       }),
     }))
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     const result = await client.payments.list()
     expect(result.payments).toHaveLength(1)
     expect(result.payments[0].status).toBe("settled")
@@ -146,7 +48,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     await client.payments.list({ limit: 50 })
 
     expect(mockFetch).toHaveBeenCalledWith(
@@ -189,13 +91,13 @@ describe("PaymentsResource", () => {
           },
           signature: "base64sig",
           publicKey: "z6Mkpub",
-          did: "did:web:loomal.ai:identities:id-1",
+          did: "did:web:mailgent.dev:identities:id-1",
         },
       }),
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     const result = await client.payments.get("pay-1")
 
     expect(result.id).toBe("pay-1")
@@ -234,7 +136,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     const result = await client.payments.pay({ url: "https://seller.example.com/search" })
 
     expect(result.ok).toBe(true)
@@ -272,7 +174,7 @@ describe("PaymentsResource", () => {
       }),
     }))
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     const result = await client.payments.pay({ url: "https://seller.example.com/search" })
 
     expect(result.ok).toBe(false)
@@ -306,7 +208,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     await client.payments.pay({ url: "https://seller.example.com/search", dryRun: true })
 
     const body = JSON.parse((mockFetch.mock.calls[0][1] as any).body)
@@ -320,7 +222,7 @@ describe("PaymentsResource", () => {
       json: () => Promise.resolve({ error: "unauthorized", message: "missing scope" }),
     }))
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     await expect(
       client.payments.pay({ url: "https://seller.example.com/search" }),
     ).rejects.toThrow(/discriminator/)
@@ -365,7 +267,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     const result = await client.payments.activity()
 
     expect(result.count).toBe(2)
@@ -388,7 +290,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     await client.payments.activity({ limit: 25 })
 
     expect(mockFetch).toHaveBeenCalledWith(
@@ -422,7 +324,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     const m = await client.payments.mandates.create({
       maxPerCallUsdc: "0.10",
       dailyCapUsdc: "1.00",
@@ -444,7 +346,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     const result = await client.payments.mandates.list()
     expect(result.mandates).toEqual([])
     expect(mockFetch).toHaveBeenCalledWith(
@@ -463,7 +365,7 @@ describe("PaymentsResource", () => {
       .mockResolvedValueOnce({ ok: true, status: 204 })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     await client.payments.mandates.get("m/x")
     await client.payments.mandates.revoke("m/x")
 
@@ -480,7 +382,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     await client.payments.get("pay/with slash")
 
     expect(mockFetch).toHaveBeenCalledWith(

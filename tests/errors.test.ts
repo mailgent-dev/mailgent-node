@@ -1,18 +1,18 @@
 import { describe, it, expect } from "vitest"
-import { LoomalApiError } from "../src/errors"
+import { MailgentApiError } from "../src/errors"
 
-describe("LoomalApiError", () => {
+describe("MailgentApiError", () => {
   it("has correct properties", () => {
-    const err = new LoomalApiError(404, "not_found", "Resource not found")
+    const err = new MailgentApiError(404, "not_found", "Resource not found")
     expect(err.status).toBe(404)
     expect(err.code).toBe("not_found")
     expect(err.message).toBe("Resource not found")
-    expect(err.name).toBe("LoomalApiError")
+    expect(err.name).toBe("MailgentApiError")
   })
 
   it("is an instance of Error", () => {
-    const err = new LoomalApiError(500, "internal", "Server error")
+    const err = new MailgentApiError(500, "internal", "Server error")
     expect(err).toBeInstanceOf(Error)
-    expect(err).toBeInstanceOf(LoomalApiError)
+    expect(err).toBeInstanceOf(MailgentApiError)
   })
 })

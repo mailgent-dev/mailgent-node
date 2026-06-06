@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest"
-import { Loomal } from "../src/client"
+import { Mailgent } from "../src/client"
 
 function mockPutOk() {
   const mockFetch = vi.fn().mockResolvedValue({
@@ -31,7 +31,7 @@ describe("VaultResource store helpers", () => {
 
   it("storeApiKey with a string stores legacy { key } shape", async () => {
     const mockFetch = mockPutOk()
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     await client.vault.storeApiKey("stripe", "sk_live_abc123")
 
     const body = parseBody(mockFetch.mock.calls[0])
@@ -42,7 +42,7 @@ describe("VaultResource store helpers", () => {
 
   it("storeApiKey with { clientId, secret } stores OAuth-style pair and mirrors clientId in metadata", async () => {
     const mockFetch = mockPutOk()
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     await client.vault.storeApiKey("twitter", { clientId: "abc123", secret: "def456" })
 
     const body = parseBody(mockFetch.mock.calls[0])
@@ -53,7 +53,7 @@ describe("VaultResource store helpers", () => {
 
   it("storeCard encrypts all card fields and derives last4 in metadata", async () => {
     const mockFetch = mockPutOk()
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     await client.vault.storeCard("personal-visa", {
       cardholder: "Jane Doe",
       number: "4242 4242 4242 4242",
@@ -74,7 +74,7 @@ describe("VaultResource store helpers", () => {
 
   it("storeShippingAddress puts all fields in encrypted data", async () => {
     const mockFetch = mockPutOk()
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     await client.vault.storeShippingAddress("home", {
       name: "Autonomous Agent",
       line1: "1 Demo Way",
@@ -94,7 +94,7 @@ describe("VaultResource store helpers", () => {
 
   it("generic store still works for arbitrary types", async () => {
     const mockFetch = mockPutOk()
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     await client.vault.store("db", {
       type: "DATABASE",
       data: { password: "s3cr3t" },
@@ -117,7 +117,7 @@ describe("VaultResource TOTP + backup codes", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     const res = await client.vault.totp("github-2fa")
 
     expect(mockFetch.mock.calls[0][0]).toContain("/v0/vault/github-2fa/totp")
@@ -130,7 +130,7 @@ describe("VaultResource TOTP + backup codes", () => {
       json: () => Promise.resolve({ code: "654321", remaining: 17 }),
     }))
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     const res = await client.vault.totp("legacy")
 
     expect(res.code).toBe("654321")
@@ -144,7 +144,7 @@ describe("VaultResource TOTP + backup codes", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     const res = await client.vault.totpUseBackup("github-2fa")
 
     const [url, init] = mockFetch.mock.calls[0]
@@ -159,7 +159,7 @@ describe("VaultResource TOTP + backup codes", () => {
       json: () => Promise.resolve({ code: "letters-AND-digits-123_OK!", remaining: 0 }),
     }))
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     const res = await client.vault.totpUseBackup("x")
     expect(res.code).toBe("letters-AND-digits-123_OK!")
     expect(res.remaining).toBe(0)
@@ -172,7 +172,7 @@ describe("VaultResource TOTP + backup codes", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     await client.vault.totpUseBackup("name with spaces/and/slashes")
 
     expect(mockFetch.mock.calls[0][0]).toContain(
@@ -180,26 +180,26 @@ describe("VaultResource TOTP + backup codes", () => {
     )
   })
 
-  it("totpUseBackup throws LoomalApiError on 400 (no codes left)", async () => {
+  it("totpUseBackup throws MailgentApiError on 400 (no codes left)", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
       ok: false, status: 400,
       json: () => Promise.resolve({ error: "bad_request", message: "No unused backup codes remaining", status: 400 }),
     }))
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     await expect(client.vault.totpUseBackup("drained")).rejects.toMatchObject({
       status: 400,
       code: "bad_request",
     })
   })
 
-  it("totpUseBackup throws LoomalApiError on 404 (unknown credential)", async () => {
+  it("totpUseBackup throws MailgentApiError on 404 (unknown credential)", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
       ok: false, status: 404,
       json: () => Promise.resolve({ error: "not_found", message: "Credential not found", status: 404 }),
     }))
 
-    const client = new Loomal({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "loid-test" })
     await expect(client.vault.totpUseBackup("missing")).rejects.toMatchObject({
       status: 404,
       code: "not_found",
@@ -207,18 +207,18 @@ describe("VaultResource TOTP + backup codes", () => {
   })
 })
 
-const integrationDescribe = process.env.LOOMAL_API_URL ? describe : describe.skip
+const integrationDescribe = process.env.MAILGENT_API_URL ? describe : describe.skip
 integrationDescribe("VaultResource integration (live API)", () => {
-  const baseUrl = process.env.LOOMAL_API_URL!
-  const apiKey = process.env.LOOMAL_API_KEY!
-  const credName = process.env.LOOMAL_TEST_CRED || "test-totp-node"
+  const baseUrl = process.env.MAILGENT_API_URL!
+  const apiKey = process.env.MAILGENT_API_KEY!
+  const credName = process.env.MAILGENT_TEST_CRED || "test-totp-node"
 
   // Earlier suites in this file stub global fetch via vi.stubGlobal — clear it
   // so the real fetch is used here, otherwise we hit the live API through a stub.
   beforeEach(() => { vi.unstubAllGlobals() })
 
   it("totp returns code, remaining, and backupCodesRemaining (>=0)", async () => {
-    const client = new Loomal({ apiKey, baseUrl })
+    const client = new Mailgent({ apiKey, baseUrl })
     const res = await client.vault.totp(credName)
     expect(typeof res.code).toBe("string")
     expect(res.code).toMatch(/^\d{6}$/)
@@ -228,7 +228,7 @@ integrationDescribe("VaultResource integration (live API)", () => {
   })
 
   it("totpUseBackup consumes a code and decrements the count", async () => {
-    const client = new Loomal({ apiKey, baseUrl })
+    const client = new Mailgent({ apiKey, baseUrl })
     const before = (await client.vault.totp(credName)).backupCodesRemaining ?? 0
     if (before === 0) return // nothing to consume
     const used = await client.vault.totpUseBackup(credName)
@@ -238,7 +238,7 @@ integrationDescribe("VaultResource integration (live API)", () => {
   })
 
   it("totpUseBackup returns DIFFERENT codes on consecutive calls (single-use)", async () => {
-    const client = new Loomal({ apiKey, baseUrl })
+    const client = new Mailgent({ apiKey, baseUrl })
     const before = (await client.vault.totp(credName)).backupCodesRemaining ?? 0
     if (before < 2) return
     const a = await client.vault.totpUseBackup(credName)
@@ -247,7 +247,7 @@ integrationDescribe("VaultResource integration (live API)", () => {
   })
 
   it("totpUseBackup throws 400 once codes are exhausted", async () => {
-    const client = new Loomal({ apiKey, baseUrl })
+    const client = new Mailgent({ apiKey, baseUrl })
     // drain
     let safety = 20
     while (safety-- > 0) {
@@ -265,7 +265,7 @@ integrationDescribe("VaultResource integration (live API)", () => {
   })
 
   it("totpUseBackup throws 404 for unknown credential", async () => {
-    const client = new Loomal({ apiKey, baseUrl })
+    const client = new Mailgent({ apiKey, baseUrl })
     await expect(client.vault.totpUseBackup("__definitely_not_real__")).rejects.toMatchObject({
       status: 404,
     })

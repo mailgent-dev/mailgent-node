@@ -1,13 +1,13 @@
 import { describe, it, expect } from "vitest"
-import { Loomal } from "../src/client"
+import { Mailgent } from "../src/client"
 
-describe("Loomal client", () => {
+describe("Mailgent client", () => {
   it("throws if no API key provided", () => {
-    expect(() => new Loomal({ apiKey: "" })).toThrow("API key is required")
+    expect(() => new Mailgent({ apiKey: "" })).toThrow("API key is required")
   })
 
   it("creates client with API key", () => {
-    const client = new Loomal({ apiKey: "loid-test123" })
+    const client = new Mailgent({ apiKey: "loid-test123" })
     expect(client.identity).toBeDefined()
     expect(client.mail).toBeDefined()
     expect(client.vault).toBeDefined()
@@ -16,7 +16,7 @@ describe("Loomal client", () => {
   })
 
   it("accepts custom base URL", () => {
-    const client = new Loomal({ apiKey: "loid-test", baseUrl: "http://localhost:3001" })
+    const client = new Mailgent({ apiKey: "loid-test", baseUrl: "http://localhost:3001" })
     expect(client.identity).toBeDefined()
   })
 })
