@@ -6,12 +6,12 @@ import type {
 } from "../types"
 
 /**
- * Spend policy attached to your project's wallet. Loomal enforces the caps
+ * Spend policy attached to your project's wallet. Mailgent enforces the caps
  * server-side on every `payments.pay()` call. Create one per project (the
  * first `pay()` against an identity without a mandate will fail with
  * `mandate_not_found`).
  *
- * Mounted at `loomal.payments.mandates`.
+ * Mounted at `mailgent.payments.mandates`.
  */
 export class MandatesResource {
   constructor(private http: HttpClient) {}

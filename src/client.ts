@@ -6,11 +6,11 @@ import { LogsResource } from "./resources/logs"
 import { DidResource } from "./resources/did"
 import { CalendarResource } from "./resources/calendar"
 import { PaymentsResource } from "./resources/payments"
-import type { LoomalConfig } from "./types"
+import type { MailgentConfig } from "./types"
 
-const DEFAULT_BASE_URL = "https://api.loomal.ai"
+const DEFAULT_BASE_URL = "https://api.mailgent.dev"
 
-export class Loomal {
+export class Mailgent {
   readonly identity: IdentityResource
   readonly mail: MailResource
   readonly vault: VaultResource
@@ -19,9 +19,9 @@ export class Loomal {
   readonly calendar: CalendarResource
   readonly payments: PaymentsResource
 
-  constructor(config: LoomalConfig) {
+  constructor(config: MailgentConfig) {
     if (!config.apiKey) {
-      throw new Error("Loomal API key is required. Pass { apiKey: 'loid-...' } or set LOOMAL_API_KEY env var.")
+      throw new Error("Mailgent API key is required. Pass { apiKey: 'loid-...' } or set MAILGENT_API_KEY env var.")
     }
 
     const http = new HttpClient(config.baseUrl || DEFAULT_BASE_URL, config.apiKey)

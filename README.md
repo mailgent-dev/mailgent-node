@@ -1,114 +1,77 @@
-# Loomal Node.js SDK
+# Mailgent Node.js SDK
 
-The official Node.js/TypeScript SDK for the [Loomal API](https://docs.loomal.ai) -- identity, mail, vault, calendar, and **Loomal Pay** for AI agents.
+The official Node.js/TypeScript SDK for the [Mailgent API](https://docs.mailgent.dev) -- identity, mail, vault, calendar, and buyer-side x402 payments for AI agents.
 
-[![npm](https://img.shields.io/npm/v/@loomal/sdk)](https://www.npmjs.com/package/@loomal/sdk)
+[![npm](https://img.shields.io/npm/v/@mailgent/sdk)](https://www.npmjs.com/package/@mailgent/sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 - Zero dependencies (native `fetch`)
 - ESM + CJS dual output
 - Full TypeScript type definitions
 - Node 18+
-- Drop-in **paywall middleware** for Express, Hono, and MCP
 
 ## Installation
 
 ```bash
-npm install @loomal/sdk
+npm install @mailgent/sdk
 ```
 
 ## Quick start
 
 ```typescript
-import { Loomal } from "@loomal/sdk";
+import { Mailgent } from "@mailgent/sdk";
 
-const client = new Loomal({ apiKey: "loid-..." });
+const client = new Mailgent({ apiKey: "loid-..." });
 
 const { messages } = await client.mail.listMessages({ limit: 10 });
 ```
 
-## Loomal Pay paywall middleware
+## Payments (buyer)
 
-Charge USDC per call on top of any HTTP handler. The middleware does the
-two-call x402 flow against `api.loomal.ai` for you.
-
-### Express
-
-```typescript
-import express from "express";
-import { requirePayment } from "@loomal/sdk/paywall/express";
-
-const app = express();
-
-app.get(
-  "/api/search",
-  requirePayment({ amount: "0.01" }),
-  (req, res) => res.json({ results: [/* ... */] }),
-);
-```
-
-### Hono
+Pay any x402-protected URL from your agent's own wallet. The SDK drives the
+full handshake against `api.mailgent.dev`: discover the 402 challenge, check
+your mandate caps, sign the EIP-3009 authorization, retry, and record.
 
 ```typescript
-import { Hono } from "hono";
-import { requirePayment } from "@loomal/sdk/paywall/hono";
-
-const app = new Hono();
-
-app.get(
-  "/api/search",
-  requirePayment({ amount: "0.01" }),
-  (c) => c.json({ results: [/* ... */] }),
-);
+const result = await client.payments.pay({ url: "https://api.example.com/paid" });
+if (result.ok) {
+  // payment settled — proceed with result
+}
 ```
 
-### MCP server
+Spend caps are enforced server-side via mandates. Create one per project:
 
 ```typescript
-import { requirePayment } from "@loomal/sdk/paywall/mcp";
-
-server.tool(
-  "search",
-  { description: "Paid search" },
-  requirePayment({ amount: "0.01" }, async (args) => ({
-    results: [/* ... */],
-  })),
-);
+await client.payments.mandates.create({
+  maxPerCallUsdc: "0.10",
+  dailyCapUsdc: "5.00",
+});
 ```
 
-The middleware reads your seller API key from `LOOMAL_API_KEY` (or
-`SELLER_LOOMAL_API_KEY`) by default, or you can pass `apiKey` explicitly:
-
-```typescript
-requirePayment({ amount: "0.01", apiKey: process.env.MY_LOOMAL_KEY });
-```
-
-Settled payments return an Ed25519-signed receipt and an
-[on-chain USDC transfer on Base](https://basescan.org). See the
-[full payments guide](https://docs.loomal.ai/payments) for the protocol
-shape and webhook configuration.
+Use `client.payments.activity()` for a bank-statement-style feed of payments
+sent and received.
 
 ### Webhook signature verification
 
-Loomal sends `X-Loomal-Signature: sha256=<hex>` (HMAC-SHA256 of the raw
-request body) and `X-Loomal-Event` / `X-Loomal-Idempotency-Key` for
+Mailgent sends `X-Mailgent-Signature: sha256=<hex>` (HMAC-SHA256 of the raw
+request body) and `X-Mailgent-Event` / `X-Mailgent-Idempotency-Key` for
 event type and de-duplication. Verify before trusting the body:
 
 ```typescript
-import { verifyWebhook } from "@loomal/sdk/webhook";
+import { verifyWebhook } from "@mailgent/sdk/webhook";
 
 app.post(
-  "/webhooks/loomal",
+  "/webhooks/mailgent",
   express.raw({ type: "application/json" }),
   async (req, res) => {
     const ok = await verifyWebhook(
       req.body.toString(),
-      req.header("x-loomal-signature"),
-      process.env.LOOMAL_WEBHOOK_SECRET!,
+      req.header("x-mailgent-signature"),
+      process.env.MAILGENT_WEBHOOK_SECRET!,
     );
     if (!ok) return res.status(400).send("invalid signature");
 
-    // de-dupe on req.header("x-loomal-idempotency-key"), then handle.
+    // de-dupe on req.header("x-mailgent-idempotency-key"), then handle.
     // Today the only event type is `payment.received`.
   },
 );
@@ -119,18 +82,18 @@ Cloudflare Workers.
 
 ## Authentication
 
-Create an API key in the [Loomal Console](https://console.loomal.ai). Keys are prefixed with `loid-`.
+Create an API key in the [Mailgent Console](https://console.mailgent.dev). Keys are prefixed with `loid-`.
 
 Pass the key directly:
 
 ```typescript
-const client = new Loomal({ apiKey: "loid-..." });
+const client = new Mailgent({ apiKey: "loid-..." });
 ```
 
 Or load from an environment variable:
 
 ```typescript
-const client = new Loomal({ apiKey: process.env.LOOMAL_API_KEY });
+const client = new Mailgent({ apiKey: process.env.MAILGENT_API_KEY });
 ```
 
 ## Usage
@@ -180,19 +143,19 @@ Supported credential types: `LOGIN`, `API_KEY`, `OAUTH`, `TOTP`, `SSH_KEY`, `DAT
 
 ### More resources
 
-The SDK also exposes `client.mail`, `client.calendar`, `client.logs`, and `client.did`. See the full reference at **[docs.loomal.ai](https://docs.loomal.ai)** for request/response shapes, pagination, and end-to-end examples.
+The SDK also exposes `client.mail`, `client.calendar`, `client.logs`, and `client.did`. See the full reference at **[docs.mailgent.dev](https://docs.mailgent.dev)** for request/response shapes, pagination, and end-to-end examples.
 
 ## Error handling
 
-All API errors are thrown as `LoomalApiError` with structured fields:
+All API errors are thrown as `MailgentApiError` with structured fields:
 
 ```typescript
-import { Loomal, LoomalApiError } from "loomal";
+import { Mailgent, MailgentApiError } from "@mailgent/sdk";
 
 try {
   await client.mail.send({ to: "test@example.com", subject: "Hi", text: "Hello" });
 } catch (e) {
-  if (e instanceof LoomalApiError) {
+  if (e instanceof MailgentApiError) {
     console.error(e.status);  // HTTP status code
     console.error(e.code);    // API error code
     console.error(e.message); // Human-readable message
@@ -206,7 +169,7 @@ The SDK exports all request and response types:
 
 ```typescript
 import type {
-  LoomalConfig,
+  MailgentConfig,
   MessageResponse,
   ThreadResponse,
   ThreadDetailResponse,
@@ -222,14 +185,14 @@ import type {
   PaginatedLogs,
   LogsStatsResponse,
   DidDocument,
-} from "loomal";
+} from "@mailgent/sdk";
 ```
 
 ## Links
 
-- [Documentation](https://docs.loomal.ai)
-- [Website](https://loomal.ai)
-- [Console](https://console.loomal.ai)
+- [Documentation](https://docs.mailgent.dev)
+- [Website](https://mailgent.dev)
+- [Console](https://console.mailgent.dev)
 
 ## License
 

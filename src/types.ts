@@ -85,10 +85,9 @@ export interface CredentialWithData extends CredentialMetadata {
 }
 
 /**
- * SELLER projects accept x402 payments on registered endpoints (their server
- * imports `@loomal/sdk/paywall/*` middleware). BUYER projects spend via
- * mandates and own the agent infrastructure (inbox, vault, calendar, identity
- * signing) used by autonomous agents.
+ * SELLER projects accept x402 payments on registered endpoints. BUYER projects
+ * spend via mandates and own the agent infrastructure (inbox, vault, calendar,
+ * identity signing) used by autonomous agents.
  *
  * Picked at project creation; BUYER is the default. Default scopes attached
  * at create time differ by purpose — branch on this field if your code needs
@@ -146,7 +145,7 @@ export interface TotpBackupResponse {
   remaining: number
 }
 
-export interface LoomalConfig {
+export interface MailgentConfig {
   apiKey: string
   baseUrl?: string
 }

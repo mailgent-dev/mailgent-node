@@ -1,7 +1,7 @@
 {
-  "name": "@loomal/sdk",
+  "name": "@mailgent/sdk",
   "version": "0.6.2",
-  "description": "Official Node.js SDK for the Loomal API — identity infrastructure for AI agents and Loomal Pay (x402 paywall)",
+  "description": "Official Node.js SDK for the Mailgent API — identity infrastructure for AI agents and buyer-side x402 payments",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -14,36 +14,6 @@
       "require": {
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
-      }
-    },
-    "./paywall/express": {
-      "import": {
-        "types": "./dist/paywall/express.d.mts",
-        "default": "./dist/paywall/express.mjs"
-      },
-      "require": {
-        "types": "./dist/paywall/express.d.ts",
-        "default": "./dist/paywall/express.js"
-      }
-    },
-    "./paywall/hono": {
-      "import": {
-        "types": "./dist/paywall/hono.d.mts",
-        "default": "./dist/paywall/hono.mjs"
-      },
-      "require": {
-        "types": "./dist/paywall/hono.d.ts",
-        "default": "./dist/paywall/hono.js"
-      }
-    },
-    "./paywall/mcp": {
-      "import": {
-        "types": "./dist/paywall/mcp.d.mts",
-        "default": "./dist/paywall/mcp.mjs"
-      },
-      "require": {
-        "types": "./dist/paywall/mcp.d.ts",
-        "default": "./dist/paywall/mcp.js"
       }
     },
     "./webhook": {
@@ -72,7 +42,7 @@
     "node": ">=18"
   },
   "keywords": [
-    "loomal",
+    "mailgent",
     "ai",
     "agent",
     "email",
@@ -81,19 +51,18 @@
     "vault",
     "sdk",
     "x402",
-    "paywall",
     "usdc",
     "payments"
   ],
   "license": "MIT",
-  "author": "Loomal",
-  "homepage": "https://loomal.ai",
+  "author": "Mailgent",
+  "homepage": "https://mailgent.dev",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/loomal-ai/loomal-node.git"
+    "url": "git+https://github.com/mailgent-dev/mailgent-node.git"
   },
   "bugs": {
-    "url": "https://github.com/loomal-ai/loomal-node/issues"
+    "url": "https://github.com/mailgent-dev/mailgent-node/issues"
   },
   "publishConfig": {
     "access": "public"

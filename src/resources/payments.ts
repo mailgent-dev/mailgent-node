@@ -1,4 +1,4 @@
-import { LoomalApiError } from "../errors"
+import { MailgentApiError } from "../errors"
 import type { HttpClient } from "../http"
 import type {
   PaginatedPayments,
@@ -7,26 +7,7 @@ import type {
   PaymentsPayParams,
   PaymentsPayResponse,
 } from "../types"
-import type {
-  ChallengeResponse,
-  RedeemResponse,
-} from "../paywall/core"
 import { MandatesResource } from "./payments-mandates"
-
-export interface ChallengeParams {
-  amount: string
-  resource?: string
-  description?: string
-  network?: "base"
-}
-
-export interface RedeemParams {
-  paymentHeader: string
-  resource: string
-  amount: string
-  network?: "base"
-  description?: string
-}
 
 export class PaymentsResource {
   /** Spend policy for `payments.pay()`. See {@link MandatesResource}. */
@@ -34,25 +15,6 @@ export class PaymentsResource {
 
   constructor(private http: HttpClient) {
     this.mandates = new MandatesResource(http)
-  }
-
-  challenge(params: ChallengeParams): Promise<ChallengeResponse> {
-    return this.http.post<ChallengeResponse>("/v0/payments/challenge", {
-      amount: params.amount,
-      network: params.network ?? "base",
-      resource: params.resource,
-      description: params.description,
-    })
-  }
-
-  redeem(params: RedeemParams): Promise<RedeemResponse> {
-    return this.http.post<RedeemResponse>("/v0/payments/redeem", {
-      paymentHeader: params.paymentHeader,
-      resource: params.resource,
-      amount: params.amount,
-      network: params.network ?? "base",
-      description: params.description,
-    })
   }
 
   /**
@@ -68,7 +30,7 @@ export class PaymentsResource {
       dryRun: params.dryRun,
     })
     if (!data || typeof data !== "object" || !("ok" in (data as Record<string, unknown>))) {
-      throw new LoomalApiError(
+      throw new MailgentApiError(
         0,
         "unexpected_response",
         "payments.pay returned a body without an `ok` discriminator",

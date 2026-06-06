@@ -1,16 +1,16 @@
 /**
- * Verify a Loomal webhook signature.
+ * Verify a Mailgent webhook signature.
  *
- * Loomal sends `X-Loomal-Signature: sha256=<hex>` — an HMAC-SHA256 of
+ * Mailgent sends `X-Mailgent-Signature: sha256=<hex>` — an HMAC-SHA256 of
  * the raw request body using the project's webhook secret. Pass the
  * raw body bytes the request arrived with (don't re-stringify the JSON).
  *
- *   import { verifyWebhook } from "@loomal/sdk/webhook"
+ *   import { verifyWebhook } from "@mailgent/sdk/webhook"
  *
  *   const ok = await verifyWebhook(
  *     rawBody,
- *     req.header("x-loomal-signature"),
- *     process.env.LOOMAL_WEBHOOK_SECRET!,
+ *     req.header("x-mailgent-signature"),
+ *     process.env.MAILGENT_WEBHOOK_SECRET!,
  *   )
  *   if (!ok) return res.status(400).send("invalid signature")
  *

@@ -1,8 +1,8 @@
-export { Loomal } from "./client"
-export { LoomalPlatform } from "./platform"
-export { LoomalApiError } from "./errors"
+export { Mailgent } from "./client"
+export { MailgentPlatform } from "./platform"
+export { MailgentApiError } from "./errors"
 export type {
-  LoomalConfig,
+  MailgentConfig,
   PlatformConfig,
   MessageResponse,
   ThreadResponse,
@@ -59,11 +59,3 @@ export type {
 } from "./types"
 export { PAYMENT_ERROR_CODES } from "./types"
 export type { DidDocument } from "./resources/did"
-export type { ChallengeParams, RedeemParams } from "./resources/payments"
-export type {
-  ChallengeResponse,
-  RedeemResponse,
-  PaymentRequirement,
-  SignedReceipt,
-  ReceiptBody,
-} from "./paywall/core"
