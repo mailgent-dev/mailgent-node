@@ -2,7 +2,7 @@
 
 The official Node.js/TypeScript SDK for the [Mailgent API](https://docs.mailgent.dev) -- identity, mail, vault, calendar, and buyer-side x402 payments for AI agents.
 
-[![npm](https://img.shields.io/npm/v/@mailgent/sdk)](https://www.npmjs.com/package/@mailgent/sdk)
+[![npm](https://img.shields.io/npm/v/@mailgent-dev/sdk)](https://www.npmjs.com/package/@mailgent-dev/sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 - Zero dependencies (native `fetch`)
@@ -13,13 +13,13 @@ The official Node.js/TypeScript SDK for the [Mailgent API](https://docs.mailgent
 ## Installation
 
 ```bash
-npm install @mailgent/sdk
+npm install @mailgent-dev/sdk
 ```
 
 ## Quick start
 
 ```typescript
-import { Mailgent } from "@mailgent/sdk";
+import { Mailgent } from "@mailgent-dev/sdk";
 
 const client = new Mailgent({ apiKey: "loid-..." });
 
@@ -58,7 +58,7 @@ request body) and `X-Mailgent-Event` / `X-Mailgent-Idempotency-Key` for
 event type and de-duplication. Verify before trusting the body:
 
 ```typescript
-import { verifyWebhook } from "@mailgent/sdk/webhook";
+import { verifyWebhook } from "@mailgent-dev/sdk/webhook";
 
 app.post(
   "/webhooks/mailgent",
@@ -150,7 +150,7 @@ The SDK also exposes `client.mail`, `client.calendar`, `client.logs`, and `clien
 All API errors are thrown as `MailgentApiError` with structured fields:
 
 ```typescript
-import { Mailgent, MailgentApiError } from "@mailgent/sdk";
+import { Mailgent, MailgentApiError } from "@mailgent-dev/sdk";
 
 try {
   await client.mail.send({ to: "test@example.com", subject: "Hi", text: "Hello" });
@@ -185,7 +185,7 @@ import type {
   PaginatedLogs,
   LogsStatsResponse,
   DidDocument,
-} from "@mailgent/sdk";
+} from "@mailgent-dev/sdk";
 ```
 
 ## Links

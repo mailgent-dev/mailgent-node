@@ -5,7 +5,7 @@
  * the raw request body using the project's webhook secret. Pass the
  * raw body bytes the request arrived with (don't re-stringify the JSON).
  *
- *   import { verifyWebhook } from "@mailgent/sdk/webhook"
+ *   import { verifyWebhook } from "@mailgent-dev/sdk/webhook"
  *
  *   const ok = await verifyWebhook(
  *     rawBody,
