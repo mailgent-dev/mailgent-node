@@ -489,3 +489,123 @@ export interface Mandate {
 export interface MandateList {
   mandates: Mandate[]
 }
+
+// --- Slack (scopes slack:read / slack:send) ---
+
+export interface SlackConnection {
+  connected: boolean
+  /** Present only when connected. */
+  teamId?: string
+  teamName?: string
+  botUserId?: string
+  slackScopes?: string[]
+  /** ISO 8601. */
+  installedAt?: string
+}
+
+export interface SlackConnectResponse {
+  /** "Add to Slack" URL — open in a browser to authorize the workspace. */
+  installUrl: string
+  /** Seconds until the install link expires. */
+  expiresInSeconds: number
+  message: string
+}
+
+export interface SlackChannel {
+  id: string
+  name: string
+  isPrivate: boolean
+  /** The bot must be invited to a channel (`/invite` in Slack) before it can post there. */
+  botIsMember: boolean
+}
+
+export interface SlackChannelList {
+  channels: SlackChannel[]
+}
+
+export interface SendSlackMessageParams {
+  /** Channel ID, e.g. "C0123456789". */
+  channel: string
+  text: string
+  /** Parent message `ts` to reply in a thread. */
+  threadTs?: string
+}
+
+export interface SlackMessageSent {
+  channel: string
+  /** Slack message timestamp — pass as `threadTs` to reply in-thread. */
+  ts: string
+}
+
+export interface SlackMessage {
+  id: string
+  channelId: string
+  userId: string
+  text: string
+  ts: string
+  threadTs: string | null
+  eventType: string
+  /** ISO 8601. */
+  receivedAt: string
+}
+
+export interface SlackMessageList {
+  messages: SlackMessage[]
+}
+
+// --- Social (scopes social:read / social:write) ---
+
+export interface SocialAccount {
+  id: string
+  platform: string
+  username: string | null
+  displayName: string | null
+  /** ISO 8601. */
+  connectedAt: string
+}
+
+export interface SocialAccountList {
+  accounts: SocialAccount[]
+}
+
+export interface CreateSocialPostParams {
+  text: string
+  /** Restrict to specific connected account IDs. Defaults to all connected accounts. */
+  accountIds?: string[]
+  /** Restrict to specific platforms. Defaults to all connected accounts. */
+  platforms?: string[]
+  mediaUrls?: string[]
+  /** ISO 8601. Omit to post immediately. */
+  scheduledAt?: string
+}
+
+export interface CreateSocialPostResponse {
+  postId: string
+  status: string
+  /** Accounts the post targets. */
+  accounts: Array<{ id: string; platform: string; username: string | null }>
+  /** Posting is asynchronous — poll `social.getPost()` for per-platform results. */
+  message: string
+}
+
+export interface SocialPostSummary {
+  id: string
+  caption: string
+  platforms: string[]
+  status: string
+  /** ISO 8601, or null for immediate posts. */
+  scheduledAt: string | null
+  /** ISO 8601. */
+  createdAt: string
+}
+
+export interface SocialPostList {
+  posts: SocialPostSummary[]
+}
+
+export interface SocialPostDetail {
+  /** Provider post object, including current status. */
+  post: Record<string, unknown>
+  /** Per-platform publish results, or null while still processing. */
+  results: Record<string, unknown> | null
+}

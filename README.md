@@ -1,6 +1,6 @@
 # Mailgent Node.js SDK
 
-The official Node.js/TypeScript SDK for the [Mailgent API](https://docs.mailgent.dev) -- identity, mail, vault, calendar, and buyer-side x402 payments for AI agents.
+The official Node.js/TypeScript SDK for the [Mailgent API](https://docs.mailgent.dev) -- identity, mail, vault, calendar, Slack, social posting, and buyer-side x402 payments for AI agents.
 
 [![npm](https://img.shields.io/npm/v/@mailgent-dev/sdk)](https://www.npmjs.com/package/@mailgent-dev/sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -140,6 +140,45 @@ await client.vault.storeShippingAddress("home", {
 ```
 
 Supported credential types: `LOGIN`, `API_KEY`, `OAUTH`, `TOTP`, `SSH_KEY`, `DATABASE`, `SMTP`, `AWS`, `CERTIFICATE`, `CARD`, `SHIPPING_ADDRESS`, `CUSTOM`.
+
+### Slack
+
+Connect a Slack workspace once, then send and poll messages from your agent. Requires the `slack:read` / `slack:send` scopes.
+
+```typescript
+// One-time setup: open installUrl in a browser and authorize the workspace
+const { installUrl } = await client.slack.connect();
+
+// Send a message (the bot must be invited to the channel first)
+const { ts } = await client.slack.sendMessage({
+  channel: "C0123456789",
+  text: "Deploy finished ✅",
+});
+
+// Reply in-thread, and poll for inbound messages
+await client.slack.sendMessage({ channel: "C0123456789", text: "Details…", threadTs: ts });
+const { messages } = await client.slack.listMessages({ channel: "C0123456789", since: "2026-06-01T00:00:00Z" });
+```
+
+Use `client.slack.connection()`, `listChannels()`, and `disconnect()` to inspect or remove the workspace connection.
+
+### Social
+
+Post to connected social accounts. Requires the `social:read` / `social:write` scopes. Connecting accounts is console-only ([Settings → Integrations](https://console.mailgent.dev)) — agents cannot initiate connections.
+
+```typescript
+const { accounts } = await client.social.listAccounts();
+
+// Post to all connected accounts (or filter by accountIds / platforms)
+const { postId } = await client.social.createPost({
+  text: "We just shipped v2 🚀",
+  mediaUrls: ["https://example.com/banner.png"],
+  scheduledAt: "2026-06-15T09:00:00Z", // omit to post immediately
+});
+
+// Posting is asynchronous — poll for per-platform results
+const { post, results } = await client.social.getPost(postId);
+```
 
 ### More resources
 

@@ -6,6 +6,8 @@ import { LogsResource } from "./resources/logs"
 import { DidResource } from "./resources/did"
 import { CalendarResource } from "./resources/calendar"
 import { PaymentsResource } from "./resources/payments"
+import { SlackResource } from "./resources/slack"
+import { SocialResource } from "./resources/social"
 import type { MailgentConfig } from "./types"
 
 const DEFAULT_BASE_URL = "https://api.mailgent.dev"
@@ -18,6 +20,8 @@ export class Mailgent {
   readonly did: DidResource
   readonly calendar: CalendarResource
   readonly payments: PaymentsResource
+  readonly slack: SlackResource
+  readonly social: SocialResource
 
   constructor(config: MailgentConfig) {
     if (!config.apiKey) {
@@ -33,5 +37,7 @@ export class Mailgent {
     this.did = new DidResource(http)
     this.calendar = new CalendarResource(http)
     this.payments = new PaymentsResource(http)
+    this.slack = new SlackResource(http)
+    this.social = new SocialResource(http)
   }
 }

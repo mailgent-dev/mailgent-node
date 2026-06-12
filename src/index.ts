@@ -56,6 +56,21 @@ export type {
   Mandate,
   MandateCreateParams,
   MandateList,
+  SlackConnection,
+  SlackConnectResponse,
+  SlackChannel,
+  SlackChannelList,
+  SendSlackMessageParams,
+  SlackMessageSent,
+  SlackMessage,
+  SlackMessageList,
+  SocialAccount,
+  SocialAccountList,
+  CreateSocialPostParams,
+  CreateSocialPostResponse,
+  SocialPostSummary,
+  SocialPostList,
+  SocialPostDetail,
 } from "./types"
 export { PAYMENT_ERROR_CODES } from "./types"
 export type { DidDocument } from "./resources/did"
