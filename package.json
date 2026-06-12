@@ -1,7 +1,7 @@
 {
   "name": "@mailgent-dev/sdk",
-  "version": "0.6.2",
-  "description": "Official Node.js SDK for the Mailgent API — identity infrastructure for AI agents and buyer-side x402 payments",
+  "version": "0.7.0",
+  "description": "Official Node.js SDK for the Mailgent API \u2014 identity infrastructure for AI agents and buyer-side x402 payments",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
