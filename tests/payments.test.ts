@@ -5,7 +5,7 @@ describe("PaymentsResource", () => {
   afterEach(() => vi.restoreAllMocks())
 
   it("client has payments resource", () => {
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     expect(client.payments).toBeDefined()
   })
 
@@ -33,7 +33,7 @@ describe("PaymentsResource", () => {
       }),
     }))
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.payments.list()
     expect(result.payments).toHaveLength(1)
     expect(result.payments[0].status).toBe("settled")
@@ -48,7 +48,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await client.payments.list({ limit: 50 })
 
     expect(mockFetch).toHaveBeenCalledWith(
@@ -97,7 +97,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.payments.get("pay-1")
 
     expect(result.id).toBe("pay-1")
@@ -136,7 +136,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.payments.pay({ url: "https://api.example.com/search" })
 
     expect(result.ok).toBe(true)
@@ -151,7 +151,7 @@ describe("PaymentsResource", () => {
       expect.objectContaining({
         method: "POST",
         headers: expect.objectContaining({
-          Authorization: "Bearer loid-test",
+          Authorization: "Bearer mgnt-test",
           "Content-Type": "application/json",
         }),
       }),
@@ -174,7 +174,7 @@ describe("PaymentsResource", () => {
       }),
     }))
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.payments.pay({ url: "https://api.example.com/search" })
 
     expect(result.ok).toBe(false)
@@ -208,7 +208,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await client.payments.pay({ url: "https://api.example.com/search", dryRun: true })
 
     const body = JSON.parse((mockFetch.mock.calls[0][1] as any).body)
@@ -222,7 +222,7 @@ describe("PaymentsResource", () => {
       json: () => Promise.resolve({ error: "unauthorized", message: "missing scope" }),
     }))
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await expect(
       client.payments.pay({ url: "https://api.example.com/search" }),
     ).rejects.toThrow(/discriminator/)
@@ -267,7 +267,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.payments.activity()
 
     expect(result.count).toBe(2)
@@ -290,7 +290,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await client.payments.activity({ limit: 25 })
 
     expect(mockFetch).toHaveBeenCalledWith(
@@ -324,7 +324,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const m = await client.payments.mandates.create({
       maxPerCallUsdc: "0.10",
       dailyCapUsdc: "1.00",
@@ -346,7 +346,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.payments.mandates.list()
     expect(result.mandates).toEqual([])
     expect(mockFetch).toHaveBeenCalledWith(
@@ -365,7 +365,7 @@ describe("PaymentsResource", () => {
       .mockResolvedValueOnce({ ok: true, status: 204 })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await client.payments.mandates.get("m/x")
     await client.payments.mandates.revoke("m/x")
 
@@ -382,7 +382,7 @@ describe("PaymentsResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await client.payments.get("pay/with slash")
 
     expect(mockFetch).toHaveBeenCalledWith(

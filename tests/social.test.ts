@@ -5,7 +5,7 @@ describe("SocialResource", () => {
   afterEach(() => vi.restoreAllMocks())
 
   it("client has social resource", () => {
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     expect(client.social).toBeDefined()
   })
 
@@ -21,7 +21,7 @@ describe("SocialResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.social.listAccounts()
     expect(result.accounts).toHaveLength(1)
     expect(result.accounts[0].platform).toBe("x")
@@ -42,7 +42,7 @@ describe("SocialResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.social.createPost({ text: "Hello world", platforms: ["x"] })
     expect(result.postId).toBe("post-1")
     expect(result.accounts).toHaveLength(1)
@@ -66,7 +66,7 @@ describe("SocialResource", () => {
       }),
     }))
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.social.listPosts()
     expect(result.posts).toHaveLength(1)
     expect(result.posts[0].status).toBe("processed")
@@ -79,7 +79,7 @@ describe("SocialResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await client.social.listPosts({ limit: 5 })
     expect(mockFetch).toHaveBeenCalledWith(
       expect.stringContaining("limit=5"),
@@ -97,7 +97,7 @@ describe("SocialResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.social.getPost("post-1")
     expect(result.post).toBeDefined()
     expect(result.results).toBeDefined()

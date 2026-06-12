@@ -21,7 +21,7 @@ npm install @mailgent-dev/sdk
 ```typescript
 import { Mailgent } from "@mailgent-dev/sdk";
 
-const client = new Mailgent({ apiKey: "loid-..." });
+const client = new Mailgent({ apiKey: "mgnt-..." });
 
 const { messages } = await client.mail.listMessages({ limit: 10 });
 ```
@@ -82,12 +82,12 @@ Cloudflare Workers.
 
 ## Authentication
 
-Create an API key in the [Mailgent Console](https://console.mailgent.dev). Keys are prefixed with `loid-`.
+Create an API key in the [Mailgent Console](https://console.mailgent.dev). Keys are prefixed with `mgnt-`.
 
 Pass the key directly:
 
 ```typescript
-const client = new Mailgent({ apiKey: "loid-..." });
+const client = new Mailgent({ apiKey: "mgnt-..." });
 ```
 
 Or load from an environment variable:

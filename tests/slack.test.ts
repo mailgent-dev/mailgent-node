@@ -5,7 +5,7 @@ describe("SlackResource", () => {
   afterEach(() => vi.restoreAllMocks())
 
   it("client has slack resource", () => {
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     expect(client.slack).toBeDefined()
   })
 
@@ -19,7 +19,7 @@ describe("SlackResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.slack.connection()
     expect(result.connected).toBe(true)
     expect(result.teamName).toBe("Acme")
@@ -40,7 +40,7 @@ describe("SlackResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.slack.connect()
     expect(result.installUrl).toContain("slack.com")
     expect(result.expiresInSeconds).toBe(900)
@@ -57,7 +57,7 @@ describe("SlackResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.slack.disconnect()
     expect(result.message).toContain("disconnected")
     expect(mockFetch).toHaveBeenCalledWith(
@@ -74,7 +74,7 @@ describe("SlackResource", () => {
       }),
     }))
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.slack.listChannels()
     expect(result.channels).toHaveLength(1)
     expect(result.channels[0].botIsMember).toBe(true)
@@ -87,7 +87,7 @@ describe("SlackResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.slack.sendMessage({ channel: "C123", text: "Hello" })
     expect(result.ts).toBe("1718000000.000100")
     expect(mockFetch).toHaveBeenCalledWith(
@@ -111,7 +111,7 @@ describe("SlackResource", () => {
       }),
     }))
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const result = await client.slack.listMessages()
     expect(result.messages).toHaveLength(1)
     expect(result.messages[0].channelId).toBe("C123")
@@ -124,7 +124,7 @@ describe("SlackResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await client.slack.listMessages({ channel: "C123", since: "2026-06-01T00:00:00Z", limit: 10 })
     const url = mockFetch.mock.calls[0][0] as string
     expect(url).toContain("channel=C123")

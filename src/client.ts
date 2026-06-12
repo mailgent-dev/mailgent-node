@@ -25,7 +25,7 @@ export class Mailgent {
 
   constructor(config: MailgentConfig) {
     if (!config.apiKey) {
-      throw new Error("Mailgent API key is required. Pass { apiKey: 'loid-...' } or set MAILGENT_API_KEY env var.")
+      throw new Error("Mailgent API key is required. Pass { apiKey: 'mgnt-...' } or set MAILGENT_API_KEY env var.")
     }
 
     const http = new HttpClient(config.baseUrl || DEFAULT_BASE_URL, config.apiKey)

@@ -6,7 +6,7 @@ describe("MailResource — Email Rules", () => {
   afterEach(() => vi.restoreAllMocks())
 
   function mockHttp() {
-    const http = new HttpClient("https://api.mailgent.dev", "loid-test")
+    const http = new HttpClient("https://api.mailgent.dev", "mgnt-test")
     return { http, mail: new MailResource(http) }
   }
 

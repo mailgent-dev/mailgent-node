@@ -7,12 +7,12 @@ describe("MailgentPlatform client", () => {
   })
 
   it("creates client with API key", () => {
-    const client = new MailgentPlatform({ apiKey: "lopk-test123" })
+    const client = new MailgentPlatform({ apiKey: "mgpk-test123" })
     expect(client.identities).toBeDefined()
   })
 
   it("accepts custom base URL", () => {
-    const client = new MailgentPlatform({ apiKey: "lopk-test", baseUrl: "http://localhost:3001" })
+    const client = new MailgentPlatform({ apiKey: "mgpk-test", baseUrl: "http://localhost:3001" })
     expect(client.identities).toBeDefined()
   })
 })
@@ -24,17 +24,17 @@ describe("PlatformIdentitiesResource", () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true, status: 201,
       json: () => Promise.resolve({
-        identityId: "id-123", name: "Agent", rawKey: "loid-abc", emailAddress: "agent@mailgent.dev",
-        scopes: ["mail:read"], apiKeyPrefix: "loid-abc1", createdAt: "2026-01-01T00:00:00Z", type: "INBOX",
+        identityId: "id-123", name: "Agent", rawKey: "mgnt-abc", emailAddress: "agent@mailgent.dev",
+        scopes: ["mail:read"], apiKeyPrefix: "mgnt-abc1", createdAt: "2026-01-01T00:00:00Z", type: "INBOX",
       }),
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new MailgentPlatform({ apiKey: "lopk-test" })
+    const client = new MailgentPlatform({ apiKey: "mgpk-test" })
     const result = await client.identities.create({ name: "Agent", emailName: "agent", scopes: ["mail:read"] })
 
     expect(result.identityId).toBe("id-123")
-    expect(result.rawKey).toMatch(/^loid-/)
+    expect(result.rawKey).toMatch(/^mgnt-/)
     expect(mockFetch).toHaveBeenCalledWith(
       expect.stringContaining("/v0/platform/identities"),
       expect.objectContaining({ method: "POST" }),
@@ -47,7 +47,7 @@ describe("PlatformIdentitiesResource", () => {
       json: () => Promise.resolve({ identities: [{ identityId: "id-1", name: "Agent" }], count: 1 }),
     }))
 
-    const client = new MailgentPlatform({ apiKey: "lopk-test" })
+    const client = new MailgentPlatform({ apiKey: "mgpk-test" })
     const result = await client.identities.list()
     expect(result.identities).toHaveLength(1)
     expect(result.count).toBe(1)
@@ -56,10 +56,10 @@ describe("PlatformIdentitiesResource", () => {
   it("get calls GET /v0/platform/identities/:id", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
       ok: true, status: 200,
-      json: () => Promise.resolve({ identityId: "id-123", name: "Agent", apiKeyPrefix: "loid-abc1" }),
+      json: () => Promise.resolve({ identityId: "id-123", name: "Agent", apiKeyPrefix: "mgnt-abc1" }),
     }))
 
-    const client = new MailgentPlatform({ apiKey: "lopk-test" })
+    const client = new MailgentPlatform({ apiKey: "mgpk-test" })
     const result = await client.identities.get("id-123")
     expect(result.identityId).toBe("id-123")
     expect(result.apiKeyPrefix).toBeDefined()
@@ -68,7 +68,7 @@ describe("PlatformIdentitiesResource", () => {
   it("delete calls DELETE /v0/platform/identities/:id", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, status: 204 }))
 
-    const client = new MailgentPlatform({ apiKey: "lopk-test" })
+    const client = new MailgentPlatform({ apiKey: "mgpk-test" })
     const result = await client.identities.delete("id-123")
     expect(result).toBeUndefined()
   })
@@ -76,12 +76,12 @@ describe("PlatformIdentitiesResource", () => {
   it("rotateKey calls POST /v0/platform/identities/:id/rotate-key", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
       ok: true, status: 200,
-      json: () => Promise.resolve({ rawKey: "loid-newkey", apiKeyPrefix: "loid-newk" }),
+      json: () => Promise.resolve({ rawKey: "mgnt-newkey", apiKeyPrefix: "mgnt-newk" }),
     }))
 
-    const client = new MailgentPlatform({ apiKey: "lopk-test" })
+    const client = new MailgentPlatform({ apiKey: "mgpk-test" })
     const result = await client.identities.rotateKey("id-123")
-    expect(result.rawKey).toMatch(/^loid-/)
+    expect(result.rawKey).toMatch(/^mgnt-/)
   })
 
   it("sends platform key in auth header", async () => {
@@ -91,13 +91,13 @@ describe("PlatformIdentitiesResource", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new MailgentPlatform({ apiKey: "lopk-mysecretkey" })
+    const client = new MailgentPlatform({ apiKey: "mgpk-mysecretkey" })
     await client.identities.list()
 
     expect(mockFetch).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
-        headers: expect.objectContaining({ Authorization: "Bearer lopk-mysecretkey" }),
+        headers: expect.objectContaining({ Authorization: "Bearer mgpk-mysecretkey" }),
       }),
     )
   })

@@ -13,7 +13,7 @@ describe("HttpClient", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const http = new HttpClient("https://api.mailgent.dev", "loid-secret")
+    const http = new HttpClient("https://api.mailgent.dev", "mgnt-secret")
     await http.get("/v0/whoami")
 
     expect(mockFetch).toHaveBeenCalledWith(
@@ -21,7 +21,7 @@ describe("HttpClient", () => {
       expect.objectContaining({
         method: "GET",
         headers: expect.objectContaining({
-          Authorization: "Bearer loid-secret",
+          Authorization: "Bearer mgnt-secret",
         }),
       }),
     )
@@ -52,7 +52,7 @@ describe("HttpClient", () => {
       status: 204,
     }))
 
-    const http = new HttpClient("https://api.mailgent.dev", "loid-key")
+    const http = new HttpClient("https://api.mailgent.dev", "mgnt-key")
     const result = await http.delete("/v0/messages/123")
     expect(result).toBeUndefined()
   })
@@ -65,7 +65,7 @@ describe("HttpClient", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const http = new HttpClient("https://api.mailgent.dev", "loid-key")
+    const http = new HttpClient("https://api.mailgent.dev", "mgnt-key")
     await http.post("/v0/messages/send", { to: ["a@b.com"], subject: "Hi", text: "Hello" })
 
     expect(mockFetch).toHaveBeenCalledWith(
@@ -85,7 +85,7 @@ describe("HttpClient", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const http = new HttpClient("https://api.mailgent.dev/", "loid-key")
+    const http = new HttpClient("https://api.mailgent.dev/", "mgnt-key")
     await http.get("/v0/whoami")
 
     expect(mockFetch).toHaveBeenCalledWith(

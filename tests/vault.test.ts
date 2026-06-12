@@ -31,7 +31,7 @@ describe("VaultResource store helpers", () => {
 
   it("storeApiKey with a string stores legacy { key } shape", async () => {
     const mockFetch = mockPutOk()
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await client.vault.storeApiKey("stripe", "sk_live_abc123")
 
     const body = parseBody(mockFetch.mock.calls[0])
@@ -42,7 +42,7 @@ describe("VaultResource store helpers", () => {
 
   it("storeApiKey with { clientId, secret } stores OAuth-style pair and mirrors clientId in metadata", async () => {
     const mockFetch = mockPutOk()
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await client.vault.storeApiKey("twitter", { clientId: "abc123", secret: "def456" })
 
     const body = parseBody(mockFetch.mock.calls[0])
@@ -53,7 +53,7 @@ describe("VaultResource store helpers", () => {
 
   it("storeCard encrypts all card fields and derives last4 in metadata", async () => {
     const mockFetch = mockPutOk()
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await client.vault.storeCard("personal-visa", {
       cardholder: "Jane Doe",
       number: "4242 4242 4242 4242",
@@ -74,7 +74,7 @@ describe("VaultResource store helpers", () => {
 
   it("storeShippingAddress puts all fields in encrypted data", async () => {
     const mockFetch = mockPutOk()
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await client.vault.storeShippingAddress("home", {
       name: "Autonomous Agent",
       line1: "1 Demo Way",
@@ -94,7 +94,7 @@ describe("VaultResource store helpers", () => {
 
   it("generic store still works for arbitrary types", async () => {
     const mockFetch = mockPutOk()
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await client.vault.store("db", {
       type: "DATABASE",
       data: { password: "s3cr3t" },
@@ -117,7 +117,7 @@ describe("VaultResource TOTP + backup codes", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const res = await client.vault.totp("github-2fa")
 
     expect(mockFetch.mock.calls[0][0]).toContain("/v0/vault/github-2fa/totp")
@@ -130,7 +130,7 @@ describe("VaultResource TOTP + backup codes", () => {
       json: () => Promise.resolve({ code: "654321", remaining: 17 }),
     }))
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const res = await client.vault.totp("legacy")
 
     expect(res.code).toBe("654321")
@@ -144,7 +144,7 @@ describe("VaultResource TOTP + backup codes", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const res = await client.vault.totpUseBackup("github-2fa")
 
     const [url, init] = mockFetch.mock.calls[0]
@@ -159,7 +159,7 @@ describe("VaultResource TOTP + backup codes", () => {
       json: () => Promise.resolve({ code: "letters-AND-digits-123_OK!", remaining: 0 }),
     }))
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     const res = await client.vault.totpUseBackup("x")
     expect(res.code).toBe("letters-AND-digits-123_OK!")
     expect(res.remaining).toBe(0)
@@ -172,7 +172,7 @@ describe("VaultResource TOTP + backup codes", () => {
     })
     vi.stubGlobal("fetch", mockFetch)
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await client.vault.totpUseBackup("name with spaces/and/slashes")
 
     expect(mockFetch.mock.calls[0][0]).toContain(
@@ -186,7 +186,7 @@ describe("VaultResource TOTP + backup codes", () => {
       json: () => Promise.resolve({ error: "bad_request", message: "No unused backup codes remaining", status: 400 }),
     }))
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await expect(client.vault.totpUseBackup("drained")).rejects.toMatchObject({
       status: 400,
       code: "bad_request",
@@ -199,7 +199,7 @@ describe("VaultResource TOTP + backup codes", () => {
       json: () => Promise.resolve({ error: "not_found", message: "Credential not found", status: 404 }),
     }))
 
-    const client = new Mailgent({ apiKey: "loid-test" })
+    const client = new Mailgent({ apiKey: "mgnt-test" })
     await expect(client.vault.totpUseBackup("missing")).rejects.toMatchObject({
       status: 404,
       code: "not_found",

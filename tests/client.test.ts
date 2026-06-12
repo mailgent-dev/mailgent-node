@@ -7,7 +7,7 @@ describe("Mailgent client", () => {
   })
 
   it("creates client with API key", () => {
-    const client = new Mailgent({ apiKey: "loid-test123" })
+    const client = new Mailgent({ apiKey: "mgnt-test123" })
     expect(client.identity).toBeDefined()
     expect(client.mail).toBeDefined()
     expect(client.vault).toBeDefined()
@@ -16,7 +16,7 @@ describe("Mailgent client", () => {
   })
 
   it("accepts custom base URL", () => {
-    const client = new Mailgent({ apiKey: "loid-test", baseUrl: "http://localhost:3001" })
+    const client = new Mailgent({ apiKey: "mgnt-test", baseUrl: "http://localhost:3001" })
     expect(client.identity).toBeDefined()
   })
 })
